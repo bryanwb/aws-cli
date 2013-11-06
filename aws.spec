@@ -30,21 +30,21 @@ boto_servicefiles = Datafiles(glob.glob('%s/services/*.json' % botocore_location
 doc_examples = Datafiles(glob.glob('./awscli/examples/**/*.rst'))
 cacert = '%s/botocore/vendored/requests/cacert.pem' % botocore_location
 cacert_datafile = Datafiles([cacert], prefix='botocore/vendored/requests')
-
+cli_datafile = [('awscli/data/cli.json', './awscli/data/cli.json', 'DATA'),
+            ]
 a = Analysis(['bin/aws', 'awscli/__init__.py','awscli/customizations/commands.py','awscli/handlers.py', 'awscli/clidriver.py'],
              pathex=['.', './awscli/customizations','awscli/data/'],
-             hiddenimports=['HTMLParser','markupbase','awscli.handlers','awscli.errorhandler','awscli.customizations','IPython','awscli.customizations.s3.s3'],
+             hiddenimports=['HTMLParser','markupbase','awscli.handlers','awscli.errorhandler','awscli.customizations','awscli.customizations.s3.s3'],
              hookspath=None,
              runtime_hooks=None)
-aws_data = [('awscli/data/cli.json', './awscli/data/cli.json', 'DATA'),
-            ]
+
 pyz = PYZ(a.pure)
 exe = EXE(pyz,
           a.scripts,
           a.binaries,
           a.datas,
           a.zipfiles,
-          aws_data,
+          cli_datafile,
           doc_examples,
           boto_datafiles,
           boto_servicefiles,
